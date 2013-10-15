@@ -1,12 +1,60 @@
 var champion = new Object();
+var items = new Array();
 
+/* ------ Items ------ */
+var item = new Object();
+
+// Long Sword
+item.name = "Amplifying Tome";
+item.alias = "amplifying_tome";
+item.desc = "";
+item.ap = 20;
+items[item.alias] = item;
+
+// Long Sword
+item.name = "Long Sword";
+item.alias = "long_sword";
+item.desc = "";
+item.ad = 10;
+items[item.alias] = item;
+
+// BF Sword
+item.name = "B.F. Sword";
+item.alias = "bf_sword";
+item.desc = "";
+item.ad = 45;
+items[item.alias] = item;
+
+// Vampiric Scepter
+item = new Object();
+item.name = "Vampiric Scepter";
+item.alias = "vampiric_scepter";
+item.desc = "";
+item.ad = 10;
+item.lifesteal = 10;
+items[item.alias] = item;
+
+console.log(items);
+
+/* ------ Champions ------ */
 // Instantiate Hero Unique Attributes
 champion.name = "Vayne";
 champion.alias = "vayne";
 champion.lv = 18;
 champion.atk_delay = -0.04;
 
-//
+champion.items = new Array();
+champion.removeAllItems = function() {
+	champion.items = new Array();
+}
+champion.addItem = function(alias, total) {
+	if(total == "undefined")
+		return;
+	
+	// Just push the alias into items
+	for(var i=0; i<total; i++)
+		champion.items.push(alias);
+}
 
 // Instantiate Base Attributes
 champion.b_hp = 359;
@@ -53,19 +101,23 @@ champion.skills = new Array();
 champion.skills['passive'] = new Array();
 champion.skills['passive']['title'] = "Night Hunter";
 champion.skills['passive']['desc'] = "Vayne gains 30 movement speed when moving towards a visible enemy champion.";
+champion.skills['passive']['flag'] = new Array();
 champion.skills['passive']['flag']['isTurnedOn'] = false;
+champion.skills['passive']['self_effect'] = new Array();
 champion.skills['passive']['self_effect']['mspd'] = 30;
 
 champion.skills['q'] = new Array();
 champion.skills['q']['title'] = "Tumble";
 champion.skills['q']['desc'] = "";
 champion.skills['q']['lv'] = 0;
+champion.skills['q']['flag'] = new Array();
 champion.skills['q']['flag']['isTurnedOn'] = false;
 
 champion.skills['w'] = new Array();
 champion.skills['w']['title'] = "Silver Bolts";
 champion.skills['w']['desc'] = "";
 champion.skills['w']['lv'] = 0;
+champion.skills['w']['flag'] = new Array();
 champion.skills['w']['flag']['hasEnemy'] = false;
 champion.skills['w']['flag']['isTurnedOn'] = false;
 champion.skills['w']['flag']['minHitTrigger'] = 3;
@@ -75,6 +127,7 @@ champion.skills['e'] = new Array();
 champion.skills['e']['title'] = "Condemn";
 champion.skills['e']['desc'] = "";
 champion.skills['e']['lv'] = 0;
+champion.skills['e']['flag'] = new Array();
 champion.skills['e']['flag']['knockWall'] = false;
 champion.skills['e']['flag']['isTurnedOn'] = false;
 
@@ -82,6 +135,7 @@ champion.skills['r'] = new Array();
 champion.skills['r']['title'] = "Final Hour";
 champion.skills['r']['desc'] = "";
 champion.skills['r']['lv'] = 0;
+champion.skills['r']['flag'] = new Array();
 champion.skills['r']['flag']['isTurnedOn'] = false;
 champion.skills['r']['duration'] = 6 + (2 * champion.skills['r']['lv']);
 	
@@ -101,7 +155,53 @@ function update_lv($lv)
     champion.aspd = champion.final_champ_aspd();
     champion.mspd = champion.b_mspd + (champion.lv * champion.l_mspd);
     champion.range = champion.b_range + (champion.lv * champion.l_range);
+	
+	champion.lifesteal = 0;
+	champion.spellvamp = 0;
+	champion.crit_chance = 0.00;
+	champion.crit_damage_multiplier = 2.0;
+	
     console.log(champion);
+}
+
+function calculate_item_stats()
+{
+	var item;
+	var total_item = champion.items.length;
+	if(total_item > 0)
+	{
+		for(var i=0; i<total_item; i++)
+		{
+			item = items[champion.items[i]];
+			
+			if(typeof item.hp != "undefined")
+				champion.hp += item.hp;
+			
+			if(typeof item.hp5 != "undefined")
+				champion.hp5 += item.hph5;
+			
+			if(typeof item.mp != "undefined")
+				champion.mp += item.mp;
+			
+			if(typeof item.mp5 != "undefined")
+				champion.mp5 += item.mp5;
+				
+			if(typeof item.ki != "undefined")
+				champion.ki += item.ki;
+			
+			if(typeof item.ki5 != "undefined")
+				champion.ki5 += item.ki5;
+				
+			if(typeof item.ad != "undefined")
+				champion.ad += item.ad;
+			
+			if(typeof item.ap != "undefined")
+				champion.ap += item.ap;
+			
+			if(typeof item.lifesteal != "undefined")
+				champion.lifesteal += item.lifesteal;
+		}
+	}
 }
 
 function flag_checker()
