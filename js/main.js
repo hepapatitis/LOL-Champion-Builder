@@ -4,6 +4,55 @@ var items = new Array();
 /* ------ Items ------ */
 var item = new Object();
 var unique_passive = new Object();
+var unique_aura = new Object();
+
+// Abyssal Scepter
+item = new Object();
+item.name = "Abyssal Scepter";
+item.alias = "abyssal_scepter";
+item.desc = "";
+item.ap = 70;
+item.mr = 45;
+unique_aura = new Object();
+unique_aura.name = "";
+unique_aura.alias = "abyssal_scepter_aura";
+unique_aura.zindex = 1;
+unique_aura.enemy_effect = new Object();
+unique_aura.enemy_effect.mr = -20;
+items[item.alias] = item;
+
+// Aegis of the Legion
+item = new Object();
+item.name = "Aegis of the Legion";
+item.alias = "aegis_of_the_legion";
+item.desc = "";
+item.hp = 200;
+item.armor = 20;
+
+unique_aura = new Object();
+unique_aura.name = "";
+unique_aura.alias = "aegis_of_the_legion_aura";
+unique_aura.zindex = 1;
+unique_aura.ally_effect = new Object();
+unique_aura.ally_effect.mr = 20;
+unique_aura.ally_effect.hp5 = 10;
+items[item.alias] = item;
+
+// Atma's Impaler
+item = new Object();
+item.name = "Atma's Impaler";
+item.alias = "atmas_impaler";
+item.desc = "";
+item.armor = 45;
+item.crit_chance = 15;
+unique_passive = new Object();
+
+unique_passive.name = "";
+unique_passive.alias = "atmas_impaler";
+unique_passive.zindex = 1;
+unique_passive.ad_from_percent_max_hp = 0.15;
+item.unique_passive.push(unique_passive);
+items[item.alias] = item;
 
 // Long Sword
 item = new Object();
