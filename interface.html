@@ -20,6 +20,9 @@
 	<div><strong>Attack Damage:</strong> <span id="ad"></span></div>
 	<div><strong>Ability Power:</strong> <span id="ap"></span></div>
 	<hr />
+	<div><strong>Armor Penetration:</strong> <span id="armor_pen"></span></div>
+	<div><strong>Magic Penetration:</strong> <span id="magic_pen"></span></div>
+	<hr />
 	<div><strong>Attack Speed:</strong> <span id="aspd"></span></div>
 	<div><strong>Range:</strong> <span id="range"></span></div>
 	<div><strong>Movement Speed:</strong> <span id="mspd"></span></div>
@@ -30,9 +33,28 @@
 	<div><strong>Armor:</strong> <span id="armor"></span></div>
 	<div><strong>Magic Resist:</strong> <span id="mr"></span></div>
 	<hr />
-	<div><strong>Life Steal:</strong> <span id="lifesteal"></span>%</div>
-	<div><strong>Spell Vamp:</strong> <span id="spellvamp"></span>%</div>
+	<div><strong>Life Steal:</strong> <span id="lifesteal"></span></div>
+	<div><strong>Spell Vamp:</strong> <span id="spellvamp"></span></div>
 	<hr />
+	<div>
+		<strong>Battle Simulator:</strong>
+		
+		<h3>Auto Attack:</h3>
+		<ul>
+			<li>Physical Damage / sec: <span id="bs_ad_dealt"></span></li>
+			<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit"></span></li>
+			<li>Magic Damage / sec: <span id="bs_ap_dealt"></span></li>
+			<li>Life Steal / sec: <span id="bs_lifesteal"></span></li>
+		</ul>
+		
+		<h3>Receiving Damage</h3>
+		<ul>
+			<li>Physical Damage Taken: <span id="bs_ad_taken"></span></li>
+			<li>Magic Damage Taken: <span id="bs_ap_taken"></span></li>
+		</ul>
+	</div>
+	<hr />
+	Select Level:
 	<select id="level_selector" onchange="update_level()">
 		<option value="1">1</option>
 		<option value="2">2</option>
@@ -71,7 +93,7 @@
 
 <script>
 	$(function() {
-		update_interface();
+		refresh();
 	});
 	
 	function update_level()
@@ -91,15 +113,25 @@
 		$("#ki5").html(champion.ki5);
 		$("#ad").html(champion.ad);
 		$("#ap").html(champion.ap);
-		$("#aspd").html(champion.aspd);
-		$("#mspd").html(champion.mspd);
+		$("#armor_pen").html(champion.armor_pen);
+		$("#magic_pen").html(champion.magic_pen);
+		$("#aspd").html(precise_round(champion.aspd,3));
+		$("#mspd").html(precise_round(champion.mspd,0));
 		$("#range").html(champion.range);
-		$("#armor").html(champion.armor);
-		$("#mr").html(champion.mr);
-		$("#lifesteal").html(champion.lifesteal);
-		$("#spellvamp").html(champion.spellvamp);
-		$("#crit_chance").html(champion.crit_chance);
+		$("#armor").html(precise_round(champion.armor,0));
+		$("#mr").html(precise_round(champion.mr,0));
+		$("#lifesteal").html(toPercentage(champion.lifesteal,2));
+		$("#spellvamp").html(toPercentage(champion.spellvamp,2));
+		$("#crit_chance").html(toPercentage(champion.crit_chance,2));
 		$("#crit_damage_multiplier").html(champion.crit_damage_multiplier);
+		
+		$("#bs_ad_dealt").html(precise_round(champion.bs_ad_dealt,2));
+		$("#bs_ad_dealt_w_crit").html(precise_round(champion.bs_ad_dealt_w_crit,2));
+		$("#bs_ap_dealt").html(precise_round(champion.bs_ap_dealt,2));
+		$("#bs_ad_taken").html(toPercentage(champion.bs_ad_taken,2));
+		$("#bs_ap_taken").html(toPercentage(champion.bs_ap_taken,2));
+		$("#bs_lifesteal").html(precise_round(champion.bs_lifesteal,2));
+		
 		console.log(champion.unique_passive);
 	}
 	
@@ -119,6 +151,9 @@
 	{
 		update_lv($("#level_selector").val());
 		calculate_item_stats();
+		calculate_battle_simulation();
+		
+		// Update Interface at the very end
 		update_interface();
 	}
 </script>

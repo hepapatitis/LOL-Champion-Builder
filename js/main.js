@@ -35,7 +35,7 @@ item.name = "Vampiric Scepter";
 item.alias = "vampiric_scepter";
 item.desc = "";
 item.ad = 10;
-item.lifesteal = 10;
+item.lifesteal = 0.10;
 items[item.alias] = item;
 
 // Zeal
@@ -438,6 +438,36 @@ function calculate_item_stats()
 		champion.recalculate_aspd();
 		champion.recalculate_mspd();
 	}
+	
+	stabilize();
+}
+
+function calculate_battle_simulation()
+{
+	champion.bs_ad_dealt = champion.aspd * champion.ad;
+	champion.bs_ad_dealt_w_crit = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)); // Fix this
+	champion.bs_ap_dealt = 0; // Not Implemented
+	
+	if(champion.armor >= 0)
+		champion.bs_ad_taken = 100 / (100 + champion.armor);
+	else
+		champion.bs_ad_taken = 2 - 100 / (100 - champion.armor);
+	
+	if(champion.mr >= 0)
+		champion.bs_ap_taken = 100 / (100 + champion.mr);
+	else
+		champion.bs_ap_taken = 2 - 100 / (100 - champion.mr);
+	
+	champion.bs_lifesteal = champion.bs_ad_dealt * champion.lifesteal;
+}
+
+function stabilize()
+{
+	if(champion.crit_chance > 1)
+		champion.crit_chance = 1;
+		
+	if(champion.aspd > 2.500)
+		champion.aspd = 2.500;
 }
 
 function flag_checker()
@@ -481,3 +511,14 @@ function turned_on_checker()
 }
 
 update_lv(1);
+
+// Precise Round
+//=====================================
+function precise_round(num,decimals){
+    var sign = num >= 0 ? 1 : -1;
+    return (Math.round((num*Math.pow(10,decimals))+(sign*0.001))/Math.pow(10,decimals)).toFixed(decimals);
+}
+
+function toPercentage(num,decimals) {
+	return precise_round(num*100,decimals) + "%";
+}
