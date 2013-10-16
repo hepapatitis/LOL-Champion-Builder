@@ -66,6 +66,7 @@
 		<label><input type="text" id="berserkers_greaves" value="0" onkeyup="toggle_item()" /> Berserker's Greaves</label><br />
 	</div>
 	<div id="total_items"></div>
+	<hr />
 </div>
 
 <script>
@@ -99,6 +100,7 @@
 		$("#spellvamp").html(champion.spellvamp);
 		$("#crit_chance").html(champion.crit_chance);
 		$("#crit_damage_multiplier").html(champion.crit_damage_multiplier);
+		console.log(champion.unique_passive);
 	}
 	
 	function toggle_item()

@@ -3,6 +3,7 @@ var items = new Array();
 
 /* ------ Items ------ */
 var item = new Object();
+var unique_passive = new Object();
 
 // Long Sword
 item = new Object();
@@ -56,8 +57,14 @@ item.aspd = 0.50;
 item.crit_chance = 0.30;
 item.mspd_percentage = 0.05;
 item.unique_passive = new Array();
-item.unique_passive['no_unit_collision'] = new Object();
-item.unique_passive['no_unit_collision'].self_effect = "no_unit_collision";
+
+unique_passive = new Object();
+unique_passive.name = "";
+unique_passive.alias = "no_unit_collision";
+unique_passive.zindex = 1;
+unique_passive.self_effect = "no_unit_collision";
+item.unique_passive.push(unique_passive);
+
 items[item.alias] = item;
 
 /* ----- Boots ----- */
@@ -68,8 +75,14 @@ item.alias = "berserkers_greaves";
 item.desc = "";
 item.aspd = 0.20;
 item.unique_passive = new Array();
-item.unique_passive['enhanced_movement'] = new Object();
-item.unique_passive['enhanced_movement'].mspd = 45;
+
+unique_passive = new Object();
+unique_passive.name = "Enhanced Movement";
+unique_passive.alias = "enhanced_movement";
+unique_passive.zindex = 2;
+unique_passive.mspd = 45;
+item.unique_passive.push(unique_passive);
+
 items[item.alias] = item;
 
 // Boots of Speed
@@ -78,8 +91,14 @@ item.name = "Boots of Speed";
 item.alias = "boots_of_speed";
 item.desc = "";
 item.unique_passive = new Array();
-item.unique_passive['enhanced_movement'] = new Object();
-item.unique_passive['enhanced_movement'].mspd = 25;
+
+unique_passive = new Object();
+unique_passive.name = "Enhanced Movement";
+unique_passive.alias = "enhanced_movement";
+unique_passive.zindex = 1;
+unique_passive.mspd = 25;
+item.unique_passive.push(unique_passive);
+
 items[item.alias] = item;
 
 // Sorcerer's Shoes
@@ -89,8 +108,14 @@ item.alias = "sorcerers_shoes";
 item.desc = "";
 item.magic_pen = 15;
 item.unique_passive = new Array();
-item.unique_passive['enhanced_movement'] = new Object();
-item.unique_passive['enhanced_movement'].mspd = 45;
+
+unique_passive = new Object();
+unique_passive.name = "Enhanced Movement";
+unique_passive.alias = "enhanced_movement";
+unique_passive.zindex = 2;
+unique_passive.mspd = 45;
+item.unique_passive.push(unique_passive);
+
 items[item.alias] = item;
 
 console.log(items);
@@ -101,6 +126,7 @@ champion.name = "Vayne";
 champion.alias = "vayne";
 champion.lv = 18;
 champion.atk_delay = -0.04;
+champion.unique_passive = new Array();
 
 champion.items = new Array();
 champion.removeAllItems = function() {
@@ -235,6 +261,8 @@ function update_lv($lv)
 	champion.crit_chance = 0.00;
 	champion.crit_damage_multiplier = 2.0;
 	
+	champion.unique_passive = new Array();
+	
     console.log(champion);
 }
 
@@ -244,6 +272,7 @@ function calculate_item_stats()
 	var total_item = champion.items.length;
 	if(total_item > 0)
 	{
+		// Calculate Normal Item Stats
 		for(var i=0; i<total_item; i++)
 		{
 			if (typeof items[champion.items[i]] != "undefined")
@@ -306,6 +335,103 @@ function calculate_item_stats()
 				
 				if(typeof item.lifesteal != "undefined")
 					champion.spellvamp += item.spellvamp;
+					
+				if(typeof item.unique_passive != "undefined")
+				{
+					var i_up, c_up, not_found = true;
+					
+					// Check if there's unique_passive with the same name.
+					// If so and it's with lower property, apply the stronger property
+					for(var k=0; k<item.unique_passive.length; k++)
+					{
+						i_up = item.unique_passive[k];
+						not_found = true;
+						
+						for(var j=0; j<champion.unique_passive.length; j++)
+						{
+							c_up = champion.unique_passive[j];
+							
+							if(i_up.alias == c_up.alias)
+							{
+								not_found = false;
+								
+								if(i_up.zindex > c_up.zindex)
+									champion.unique_passive[j] = i_up;
+							}
+						}
+						
+						// If no unique_passive in champion, add unique_passive
+						if(not_found)
+							champion.unique_passive.push(i_up);
+					}
+				}
+			}
+		}
+		
+		// Calculate Item's Unique Passive Stats
+		for(var u=0; u<champion.unique_passive.length; u++)
+		{
+			if (typeof champion.unique_passive[u] != "undefined")
+			{
+				up = champion.unique_passive[u];
+				console.log(up);
+				
+				if(typeof up.hp != "undefined")
+					champion.hp += up.hp;
+				
+				if(typeof up.hp5 != "undefined")
+					champion.hp5 += up.hph5;
+				
+				if(typeof up.mp != "undefined")
+					champion.mp += up.mp;
+				
+				if(typeof up.mp5 != "undefined")
+					champion.mp5 += up.mp5;
+					
+				if(typeof up.ki != "undefined")
+					champion.ki += up.ki;
+				
+				if(typeof up.ki5 != "undefined")
+					champion.ki5 += up.ki5;
+					
+				if(typeof up.ad != "undefined")
+					champion.ad += up.ad;
+				
+				if(typeof up.ap != "undefined")
+					champion.ap += up.ap;
+				
+				if(typeof up.armor != "undefined")
+					champion.armor += up.armor;
+				
+				if(typeof up.mr != "undefined")
+					champion.mr += up.mr;
+				
+				if(typeof up.aspd != "undefined")
+					champion.item_aspd += up.aspd;
+					
+				if(typeof up.mspd != "undefined")
+					champion.mspd += up.mspd;
+				
+				if(typeof up.mspd_percentage != "undefined")
+					champion.mspd_bonus_percentage += up.mspd_percentage;
+				
+				if(typeof up.armor_pen != "undefined")
+					champion.armor_pen += up.armor_pen;
+				
+				if(typeof up.magic_pen != "undefined")
+					champion.magic_pen += up.magic_pen;
+					
+				if(typeof up.crit_chance != "undefined")
+					champion.crit_chance += up.crit_chance;
+					
+				if(typeof up.mr != "undefined")
+					champion.crit_damage_multiplier += up.crit_damage_multiplier;
+					
+				if(typeof up.lifesteal != "undefined")
+					champion.lifesteal += up.lifesteal;
+				
+				if(typeof up.lifesteal != "undefined")
+					champion.spellvamp += up.spellvamp;
 			}
 		}
 		
