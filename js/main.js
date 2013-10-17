@@ -107,12 +107,49 @@ item.desc = "";
 item.ad = 45;
 items[item.alias] = item;
 
+// Last Whisper
+item = new Object();
+item.name = "Last Whisper";
+item.alias = "last_whisper";
+item.desc = "";
+item.ad = 40;
+item.armor_pen_percentage = 0.35;
+items[item.alias] = item;
+
 // Long Sword
 item = new Object();
 item.name = "Long Sword";
 item.alias = "long_sword";
 item.desc = "";
 item.ad = 10;
+items[item.alias] = item;
+
+// Maw of Malmortius
+item = new Object();
+item.name = "Maw of Malmortius";
+item.alias = "maw_of_malmortius";
+item.desc = "";
+item.ad = 60;
+item.mr = 40;
+item.unique_passive = new Array();
+
+unique_passive = new Object();
+unique_passive.name = "Maw of Malmortius";
+unique_passive.alias = "maw_of_malmortius";
+unique_passive.zindex = 1;
+// Maw of Malmortius is handled directly in the unique_passive function
+item.unique_passive.push(unique_passive);
+
+unique_passive = new Object();
+unique_passive.name = "Lifeline";
+unique_passive.alias = "lifeline";
+unique_passive.zindex = 1;
+unique_passive.magic_shield = 400;
+unique_passive.duration = 5;
+unique_passive.cooldown = 90;
+unique_passive.trigger = new Array();
+unique_passive.trigger['min_hp_percentage'] = 0.3;
+item.unique_passive.push(unique_passive);
 items[item.alias] = item;
 
 // Vampiric Scepter
@@ -185,6 +222,14 @@ unique_passive.zindex = 1;
 unique_passive.mspd = 25;
 item.unique_passive.push(unique_passive);
 
+items[item.alias] = item;
+
+// Sapphire Crystal
+item = new Object();
+item.name = "Sapphire Crystal";
+item.alias = "sapphire_crystal";
+item.desc = "";
+item.mp = 200;
 items[item.alias] = item;
 
 // Sorcerer's Shoes
@@ -482,7 +527,13 @@ function calculate_item_stats()
 				
 				if(typeof item.magic_pen_flat != "undefined")
 					champion.bonus_magic_pen_flat += item.magic_pen_flat;
-					
+				
+				if(typeof item.armor_pen_percentage != "undefined")
+					champion.bonus_armor_pen_percentage += item.armor_pen_percentage;
+				
+				if(typeof item.magic_pen_percentage != "undefined")
+					champion.bonus_magic_pen_percentage += item.magic_pen_percentage;
+				
 				if(typeof item.crit_chance != "undefined")
 					champion.bonus_crit_chance += item.crit_chance;
 					
@@ -643,6 +694,19 @@ function calculate_item_stats()
 					
 				if(typeof up.bonus_unit_bounty != "undefined")
 					champion.bonus_unit_bounty += up.bonus_unit_bounty;	
+					
+				if(up.alias == "maw_of_malmortius")
+				{
+					// TO-DO: cur_hp has not been implemented, so I bruteforce it, therefore this unique_passive not fully functioning yet
+					champion.cur_hp = champion.hp;
+					
+					// Maw of Malmortius Damage Calculation. 2% missing HP = +1 damage. (MAX: +35 damage)
+					var maw_of_malmortius_damage = (1 - (champion.cur_hp/champion.hp)) / 0.02 * 1;
+					if (maw_of_malmortius_damage > 35) // Cap this to +35 damage
+						maw_of_malmortius_damage = 35;
+					
+					champion.bonus_ad += maw_of_malmortius_damage;
+				}
 			}
 		}
 		
@@ -743,6 +807,8 @@ function calculate_battle_simulation()
 	champion.bs_ad_dealt_w_crit = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)); // Fix this
 	champion.bs_ap_dealt = 0; // Not Implemented
 	
+	champion.bs_lifesteal = champion.bs_ad_dealt * champion.lifesteal;
+	
 	if(champion.armor >= 0)
 		champion.bs_ad_taken = 100 / (100 + champion.armor);
 	else
@@ -753,7 +819,41 @@ function calculate_battle_simulation()
 	else
 		champion.bs_ap_taken = 2 - 100 / (100 - champion.mr);
 	
-	champion.bs_lifesteal = champion.bs_ad_dealt * champion.lifesteal;
+	
+	// With Enemy Armor & MR 100 
+	var e_armor, e_mr;
+	e_armor = 100;
+	e_mr = 100;
+	champion.bs_ad_reduction_100 = calculate_damage_taken_portion(e_armor,champion.armor_pen_flat, champion.armor_pen_percentage);
+	champion.bs_ap_reduction_100 = calculate_damage_taken_portion(e_mr,champion.magic_pen_flat, champion.magic_pen_percentage);
+	
+	champion.bs_ad_dealt_100 = champion.aspd * champion.ad * champion.bs_ad_reduction_100;
+	champion.bs_ad_dealt_w_crit_100 = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)) * champion.bs_ad_reduction_100; // Fix this
+	champion.bs_ap_dealt_100 = 0 * champion.bs_ap_reduction_100; // Not Implemented
+	
+	champion.bs_lifesteal_100 = (champion.bs_ad_dealt_100 * champion.bs_ad_reduction_100) * champion.lifesteal;
+	
+	// With Enemey Armor & MR 150
+	e_armor = 150;
+	e_mr = 150;
+	champion.bs_ad_reduction_150 = calculate_damage_taken_portion(e_armor,champion.armor_pen_flat, champion.armor_pen_percentage);
+	champion.bs_ap_reduction_150 = calculate_damage_taken_portion(e_mr,champion.magic_pen_flat, champion.magic_pen_percentage);
+	
+	champion.bs_ad_dealt_150 = champion.aspd * champion.ad * champion.bs_ad_reduction_150;
+	champion.bs_ad_dealt_w_crit_150 = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)) * champion.bs_ad_reduction_150; // Fix this
+	champion.bs_ap_dealt_150 = 0 * champion.bs_ap_reduction_150; // Not Implemented
+	
+	champion.bs_lifesteal_150 = (champion.bs_ad_dealt_100 * champion.bs_ad_reduction_150) * champion.lifesteal;
+}
+
+function calculate_damage_taken_portion(def, flat_pen, percentage_pen)
+{
+	var current_def = (def * (1-percentage_pen)) - flat_pen;
+	
+	if(current_def < 0)
+		current_def = 0;
+		
+	return 100 / (100 + current_def);
 }
 
 function stabilize()

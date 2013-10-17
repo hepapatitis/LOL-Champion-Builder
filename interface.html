@@ -51,11 +51,32 @@
 						<h2>Battle Simulator</h2>
 						
 						<h3>Auto Attack:</h3>
+						<h4>No Armor &amp; Magic Resist, No Reduction</h4>
 						<ul>
 							<li>Physical Damage / sec: <span id="bs_ad_dealt"></span></li>
 							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit"></span></li>
 							<li>Magic Damage / sec: <span id="bs_ap_dealt"></span></li>
 							<li>Life Steal / sec: <span id="bs_lifesteal"></span></li>
+						</ul>
+						
+						<h4>100 Armor &amp; Magic Resist</h4>
+						<ul>
+							<li>Physical Damage / sec: <span id="bs_ad_dealt_100"></span></li>
+							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit_100"></span></li>
+							<li>Magic Damage / sec: <span id="bs_ap_dealt_100"></span></li>
+							<li>Life Steal / sec: <span id="bs_lifesteal_100"></span></li>
+							<li>Enemy's Physical Damage Taken: <span id="bs_ad_reduction_100"></span></li>
+							<li>Enemy's Magic Damage Taken: <span id="bs_ap_reduction_100"></span></li>
+						</ul>
+						
+						<h4>150 Armor &amp; Magic Resist</h4>
+						<ul>
+							<li>Physical Damage / sec: <span id="bs_ad_dealt_150"></span></li>
+							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit_150"></span></li>
+							<li>Magic Damage / sec: <span id="bs_ap_dealt_150"></span></li>
+							<li>Life Steal / sec: <span id="bs_lifesteal_150"></span></li>
+							<li>Enemy's Physical Damage Taken: <span id="bs_ad_reduction_150"></span></li>
+							<li>Enemy's Magic Damage Taken: <span id="bs_ap_reduction_150"></span></li>
 						</ul>
 						
 						<h3>Receiving Damage</h3>
@@ -110,6 +131,9 @@
 				<label><input type="text" id="bf_sword" value="0" onkeyup="toggle_item()" /> B.F. Sword</label><br />
 				<label><input type="text" id="blasting_wand" value="0" onkeyup="toggle_item()" /> Blasting Wand</label><br />
 				<label><input type="text" id="long_sword" value="0" onkeyup="toggle_item()" /> Long Sword</label><br />
+				<label><input type="text" id="last_whisper" value="0" onkeyup="toggle_item()" /> Last Whisper</label><br />
+				<label><input type="text" id="maw_of_malmortius" value="0" onkeyup="toggle_item()" /> Maw of Malmortius</label><br />
+				<label><input type="text" id="sapphire_crystal" value="0" onkeyup="toggle_item()" /> Sapphire Crystal</label><br />
 				<label><input type="text" id="vampiric_scepter" value="0" onkeyup="toggle_item()" /> Vampiric Scepter</label><br />
 				<label><input type="text" id="phantom_dancer" value="0" onkeyup="toggle_item()" /> Phantom Dancer</label><br />
 				<label><input type="text" id="zeal" value="0" onkeyup="toggle_item()" /> Zeal</label><br />
@@ -176,9 +200,24 @@
 		$("#bs_ad_dealt").html(precise_round(champion.bs_ad_dealt,2));
 		$("#bs_ad_dealt_w_crit").html(precise_round(champion.bs_ad_dealt_w_crit,2));
 		$("#bs_ap_dealt").html(precise_round(champion.bs_ap_dealt,2));
+		$("#bs_lifesteal").html(precise_round(champion.bs_lifesteal,2));
+		
+		$("#bs_ad_dealt_100").html(precise_round(champion.bs_ad_dealt_100,2));
+		$("#bs_ad_dealt_w_crit_100").html(precise_round(champion.bs_ad_dealt_w_crit_100,2));
+		$("#bs_ap_dealt_100").html(precise_round(champion.bs_ap_dealt_100,2));
+		$("#bs_lifesteal_100").html(precise_round(champion.bs_lifesteal_100,2));
+		$("#bs_ad_reduction_100").html(toPercentage(champion.bs_ad_reduction_100,2));
+		$("#bs_ap_reduction_100").html(toPercentage(champion.bs_ap_reduction_100,2));
+		
+		$("#bs_ad_dealt_150").html(precise_round(champion.bs_ad_dealt_150,2));
+		$("#bs_ad_dealt_w_crit_150").html(precise_round(champion.bs_ad_dealt_w_crit_150,2));
+		$("#bs_ap_dealt_150").html(precise_round(champion.bs_ap_dealt_150,2));
+		$("#bs_lifesteal_150").html(precise_round(champion.bs_lifesteal_150,2));
+		$("#bs_ad_reduction_150").html(toPercentage(champion.bs_ad_reduction_150,2));
+		$("#bs_ap_reduction_150").html(toPercentage(champion.bs_ap_reduction_150,2));
+		
 		$("#bs_ad_taken").html(toPercentage(champion.bs_ad_taken,2));
 		$("#bs_ap_taken").html(toPercentage(champion.bs_ap_taken,2));
-		$("#bs_lifesteal").html(precise_round(champion.bs_lifesteal,2));
 		
 		var temp = "";
 		for (var z=0; z<champion.unique_aura.length; z++)
