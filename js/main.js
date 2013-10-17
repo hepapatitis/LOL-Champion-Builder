@@ -13,12 +13,15 @@ item.alias = "abyssal_scepter";
 item.desc = "";
 item.ap = 70;
 item.mr = 45;
+item.unique_aura = new Array();
+
 unique_aura = new Object();
-unique_aura.name = "";
+unique_aura.name = "Abyssal Scepter Aura";
 unique_aura.alias = "abyssal_scepter_aura";
 unique_aura.zindex = 1;
 unique_aura.enemy_effect = new Object();
 unique_aura.enemy_effect.mr = -20;
+item.unique_aura.push(unique_aura);
 items[item.alias] = item;
 
 // Aegis of the Legion
@@ -28,14 +31,16 @@ item.alias = "aegis_of_the_legion";
 item.desc = "";
 item.hp = 200;
 item.armor = 20;
+item.unique_aura = new Array();
 
 unique_aura = new Object();
-unique_aura.name = "";
+unique_aura.name = "Aegis of the Legion Aura";
 unique_aura.alias = "aegis_of_the_legion_aura";
 unique_aura.zindex = 1;
 unique_aura.ally_effect = new Object();
 unique_aura.ally_effect.mr = 20;
 unique_aura.ally_effect.hp5 = 10;
+item.unique_aura.push(unique_aura);
 items[item.alias] = item;
 
 // Atma's Impaler
@@ -44,17 +49,18 @@ item.name = "Atma's Impaler";
 item.alias = "atmas_impaler";
 item.desc = "";
 item.armor = 45;
-item.crit_chance = 15;
-unique_passive = new Object();
+item.crit_chance = 0.15;
+item.unique_passive = new Array();
 
-unique_passive.name = "";
+unique_passive = new Object();
+unique_passive.name = "Atma's Impaler";
 unique_passive.alias = "atmas_impaler";
 unique_passive.zindex = 1;
-unique_passive.ad_from_percent_max_hp = 0.15;
+unique_passive.ad_from_percent_max_hp = 0.015;
 item.unique_passive.push(unique_passive);
 items[item.alias] = item;
 
-// Long Sword
+// Amplifying Tome
 item = new Object();
 item.name = "Amplifying Tome";
 item.alias = "amplifying_tome";
@@ -62,12 +68,35 @@ item.desc = "";
 item.ap = 20;
 items[item.alias] = item;
 
-// Long Sword
+// Avarice Blade
 item = new Object();
-item.name = "Long Sword";
-item.alias = "long_sword";
+item.name = "Avarice Blade";
+item.alias = "avarice_blade";
 item.desc = "";
-item.ad = 10;
+item.crit_chance = 0.10;
+item.unique_passive = new Array();
+
+unique_passive = new Object();
+unique_passive.name = "Avarice";
+unique_passive.alias = "avarice";
+unique_passive.zindex = 1;
+unique_passive.gp5 = 1.5;
+item.unique_passive.push(unique_passive);
+
+unique_passive = new Object();
+unique_passive.name = "Greed";
+unique_passive.alias = "greed";
+unique_passive.zindex = 1;
+unique_passive.bonus_unit_bounty = 2;
+item.unique_passive.push(unique_passive);
+items[item.alias] = item;
+
+// Blasting Wand
+item = new Object();
+item.name = "Blasting Wand";
+item.alias = "blasting_wand";
+item.desc = "";
+item.ap = 40;
 items[item.alias] = item;
 
 // BF Sword
@@ -76,6 +105,14 @@ item.name = "B.F. Sword";
 item.alias = "bf_sword";
 item.desc = "";
 item.ad = 45;
+items[item.alias] = item;
+
+// Long Sword
+item = new Object();
+item.name = "Long Sword";
+item.alias = "long_sword";
+item.desc = "";
+item.ad = 10;
 items[item.alias] = item;
 
 // Vampiric Scepter
@@ -108,7 +145,7 @@ item.mspd_percentage = 0.05;
 item.unique_passive = new Array();
 
 unique_passive = new Object();
-unique_passive.name = "";
+unique_passive.name = "Phantom Dancer - No Unit Collision";
 unique_passive.alias = "no_unit_collision";
 unique_passive.zindex = 1;
 unique_passive.self_effect = "no_unit_collision";
@@ -155,7 +192,7 @@ item = new Object();
 item.name = "Sorcerer's Shoes";
 item.alias = "sorcerers_shoes";
 item.desc = "";
-item.magic_pen = 15;
+item.magic_pen_flat = 15;
 item.unique_passive = new Array();
 
 unique_passive = new Object();
@@ -229,11 +266,11 @@ champion.final_champ_aspd = function () {
 }
 champion.recalculate_aspd = function () {
 	per_lv_aspd = (this.lv-1) * this.l_aspd;
-    champion.aspd = this.base_aspd() * (1 + per_lv_aspd + champion.item_aspd);
+    champion.aspd = this.base_aspd() * (1 + per_lv_aspd + champion.bonus_aspd);
 }
 champion.recalculate_mspd = function () {
 	per_lv_aspd = (this.lv-1) * this.l_aspd;
-    champion.mspd = champion.mspd * (1 + champion.mspd_bonus_percentage);
+    champion.mspd = champion.mspd * (1 + champion.bonus_mspd_percentage);
 }
 
 // Skills
@@ -284,35 +321,108 @@ champion.skills['r']['duration'] = 6 + (2 * champion.skills['r']['lv']);
 function update_lv($lv)
 {
     champion.lv = $lv;
-    champion.hp = champion.b_hp + (champion.lv * champion.l_hp);
-    champion.mp = champion.b_mp + (champion.lv * champion.l_mp);
-    champion.ki = champion.b_ki + (champion.lv * champion.l_ki);
-    champion.hp5 = champion.b_hp5 + (champion.lv * champion.l_hp5);
-    champion.mp5 = champion.b_mp5 + (champion.lv * champion.l_mp5);
-    champion.ki5 = champion.b_ki5 + (champion.lv * champion.l_ki5);
-    champion.armor = champion.b_armor + (champion.lv * champion.l_armor);
-    champion.mr = champion.b_mr + (champion.lv * champion.l_mr);
-    champion.ad = champion.b_ad + (champion.lv * champion.l_ad);
-    champion.ap = champion.b_ap + (champion.lv * champion.l_ap);
-    champion.aspd = champion.final_champ_aspd();
-    champion.item_aspd = 0;
-    champion.mspd = champion.b_mspd + (champion.lv * champion.l_mspd);
-    champion.mspd_bonus_percentage = 0;
-	champion.mspd_slow_ratio = 0;
-	champion.mspd_slow_resist_ratio = 0;
-    champion.range = champion.b_range + (champion.lv * champion.l_range);
+    champion.ori_hp = champion.b_hp + (champion.lv * champion.l_hp);
+    champion.ori_mp = champion.b_mp + (champion.lv * champion.l_mp);
+    champion.ori_ki = champion.b_ki + (champion.lv * champion.l_ki);
+    champion.ori_hp5 = champion.b_hp5 + (champion.lv * champion.l_hp5);
+    champion.ori_mp5 = champion.b_mp5 + (champion.lv * champion.l_mp5);
+    champion.ori_ki5 = champion.b_ki5 + (champion.lv * champion.l_ki5);
+    champion.ori_armor = champion.b_armor + (champion.lv * champion.l_armor);
+    champion.ori_mr = champion.b_mr + (champion.lv * champion.l_mr);
+    champion.ori_ad = champion.b_ad + (champion.lv * champion.l_ad);
+    champion.ori_ap = champion.b_ap + (champion.lv * champion.l_ap);
+    champion.ori_aspd = champion.base_aspd();
+    champion.ori_mspd = champion.b_mspd + (champion.lv * champion.l_mspd);
+    champion.ori_range = champion.b_range + (champion.lv * champion.l_range);
 	
-	champion.armor_pen = 0;
-    champion.magic_pen = 0;
+	champion.ori_armor_pen_flat = 0;
+    champion.ori_magic_pen_flat = 0;
+	champion.ori_armor_pen_percentage = 0;
+	champion.ori_magic_pen_percentage = 0;
 	
-	champion.lifesteal = 0;
-	champion.spellvamp = 0;
-	champion.crit_chance = 0.00;
-	champion.crit_damage_multiplier = 2.0;
+	champion.ori_lifesteal = 0;
+	champion.ori_spellvamp = 0;
+	champion.ori_crit_chance = 0.00;
+	champion.ori_crit_damage_multiplier = 2.0;
 	
 	champion.unique_passive = new Array();
+	champion.unique_aura = new Array();
+}
+
+function init_bonus_stat()
+{
+	champion.bonus_hp = 0;
+	champion.bonus_hp5 = 0;
+	champion.bonus_mp = 0;
+	champion.bonus_mp5 = 0;
+	champion.bonus_ki = 0;
+	champion.bonus_ki5 = 0;
+	champion.bonus_ad = 0;
+	champion.bonus_ap = 0;
+	champion.bonus_armor = 0;
+	champion.bonus_mr = 0;
+	champion.bonus_aspd = 0;
+	champion.bonus_mspd = 0;
+	champion.bonus_mspd_percentage = 0;
+	champion.bonus_range = 0;
 	
-    console.log(champion);
+	champion.bonus_armor_pen_flat = 0;
+	champion.bonus_magic_pen_flat = 0;
+	champion.bonus_armor_pen_percentage = 0;
+	champion.bonus_magic_pen_percentage = 0;
+	
+	champion.bonus_crit_chance = 0;
+	champion.bonus_crit_damage_multiplier = 0;
+	champion.bonus_lifesteal = 0;
+	champion.bonus_spellvamp = 0;
+	
+	champion.bonus_gp5 = 0;
+	champion.bonus_unit_bounty = 0;
+	champion.bonus_champion_bounty = 0;
+	champion.ad_from_percent_max_hp = 0;
+	
+}
+
+function final_stats_calc()
+{
+	champion.hp = champion.ori_hp + champion.bonus_hp;
+    champion.mp = champion.ori_mp + champion.bonus_mp;
+    champion.ki = champion.ori_ki + champion.bonus_ki;
+    champion.hp5 = champion.ori_hp5 + champion.bonus_hp5;
+    champion.mp5 = champion.ori_mp5 + champion.bonus_mp5;
+    champion.ki5 = champion.ori_ki5 + champion.bonus_ki5;
+    champion.armor = champion.ori_armor + champion.bonus_armor;
+    champion.mr = champion.ori_mr + champion.bonus_mr;
+	
+	if(typeof champion.ad_from_percent_max_hp != "undefined")
+		champion.bonus_ad += (champion.ad_from_percent_max_hp * champion.hp);
+		
+    champion.ad = champion.ori_ad + champion.bonus_ad;
+    champion.ap = champion.ori_ap + champion.bonus_ap;
+	
+    champion.recalculate_aspd(); // Count ASPD using this method
+    champion.mspd = champion.ori_mspd + champion.bonus_mspd;
+    champion.range = champion.ori_range + champion.bonus_range;
+	
+	champion.bonus_mspd_percentage = 0;
+	champion.mspd_slow_ratio = 0;
+	champion.mspd_slow_resist_ratio = 0;
+	
+	champion.armor_pen_flat = champion.ori_armor_pen_flat + champion.bonus_armor_pen_flat;
+    champion.magic_pen_flat = champion.ori_magic_pen_flat + champion.bonus_magic_pen_flat;
+	champion.armor_pen_percentage = champion.ori_armor_pen_percentage + champion.bonus_armor_pen_percentage;
+    champion.magic_pen_percentage = champion.ori_magic_pen_percentage + champion.bonus_magic_pen_percentage;
+	
+	champion.lifesteal = champion.ori_lifesteal + champion.bonus_lifesteal;
+	champion.spellvamp = champion.ori_spellvamp + champion.bonus_spellvamp;
+	champion.crit_chance = champion.ori_crit_chance + champion.bonus_crit_chance;
+	champion.crit_damage_multiplier = champion.ori_crit_damage_multiplier + champion.bonus_crit_damage_multiplier;
+	
+	champion.extra_unit_bounty = champion.bonus_unit_bounty;
+	champion.extra_champion_bounty = champion.bonus_champion_bounty;
+	champion.gp5 = champion.bonus_gp5;
+	
+	stabilize();
 }
 
 function calculate_item_stats()
@@ -329,62 +439,69 @@ function calculate_item_stats()
 				item = items[champion.items[i]];
 				
 				if(typeof item.hp != "undefined")
-					champion.hp += item.hp;
+					champion.bonus_hp += item.hp;
 				
 				if(typeof item.hp5 != "undefined")
-					champion.hp5 += item.hph5;
+					champion.bonus_hp5 += item.hph5;
 				
 				if(typeof item.mp != "undefined")
-					champion.mp += item.mp;
+					champion.bonus_mp += item.mp;
 				
 				if(typeof item.mp5 != "undefined")
-					champion.mp5 += item.mp5;
+					champion.bonus_mp5 += item.mp5;
 					
 				if(typeof item.ki != "undefined")
-					champion.ki += item.ki;
+					champion.bonus_ki += item.ki;
 				
 				if(typeof item.ki5 != "undefined")
-					champion.ki5 += item.ki5;
+					champion.bonus_ki5 += item.ki5;
 					
 				if(typeof item.ad != "undefined")
-					champion.ad += item.ad;
+					champion.bonus_ad += item.ad;
 				
 				if(typeof item.ap != "undefined")
-					champion.ap += item.ap;
+					champion.bonus_ap += item.ap;
 				
 				if(typeof item.armor != "undefined")
-					champion.armor += item.armor;
+					champion.bonus_armor += item.armor;
 				
 				if(typeof item.mr != "undefined")
-					champion.mr += item.mr;
+					champion.bonus_mr += item.mr;
 				
 				if(typeof item.aspd != "undefined")
-					champion.item_aspd += item.aspd;
+					champion.bonus_aspd += item.aspd;
 					
 				if(typeof item.mspd != "undefined")
-					champion.mspd += item.mspd;
+					champion.bonus_mspd += item.mspd;
 				
 				if(typeof item.mspd_percentage != "undefined")
-					champion.mspd_bonus_percentage += item.mspd_percentage;
+					champion.bonus_mspd_percentage += item.mspd_percentage;
 				
-				if(typeof item.armor_pen != "undefined")
-					champion.armor_pen += item.armor_pen;
+				if(typeof item.armor_pen_flat != "undefined")
+					champion.bonus_armor_pen_flat += item.armor_pen_flat;
 				
-				if(typeof item.magic_pen != "undefined")
-					champion.magic_pen += item.magic_pen;
+				if(typeof item.magic_pen_flat != "undefined")
+					champion.bonus_magic_pen_flat += item.magic_pen_flat;
 					
 				if(typeof item.crit_chance != "undefined")
-					champion.crit_chance += item.crit_chance;
+					champion.bonus_crit_chance += item.crit_chance;
 					
-				if(typeof item.mr != "undefined")
-					champion.crit_damage_multiplier += item.crit_damage_multiplier;
+				if(typeof item.crit_damage_multiplier != "undefined")
+					champion.bonus_crit_damage_multiplier += item.crit_damage_multiplier;
 					
 				if(typeof item.lifesteal != "undefined")
-					champion.lifesteal += item.lifesteal;
+					champion.bonus_lifesteal += item.lifesteal;
 				
-				if(typeof item.lifesteal != "undefined")
-					champion.spellvamp += item.spellvamp;
-					
+				if(typeof item.spellvamp != "undefined")
+					champion.bonus_spellvamp += item.spellvamp;
+				
+				if(typeof item.gp5 != "undefined")
+					champion.bonus_gp5 += item.gp5;	
+				
+				if(typeof item.bonus_unit_bounty != "undefined")
+					champion.bonus_unit_bounty += item.bonus_unit_bounty;	
+				
+				// Add Unique Passive
 				if(typeof item.unique_passive != "undefined")
 				{
 					var i_up, c_up, not_found = true;
@@ -414,6 +531,37 @@ function calculate_item_stats()
 							champion.unique_passive.push(i_up);
 					}
 				}
+				
+				// Add Unique Aura
+				if(typeof item.unique_aura != "undefined")
+				{
+					var i_up, c_up, not_found = true;
+					
+					// Check if there's unique_aura with the same name.
+					// If so and it's with lower property, apply the stronger property
+					for(var k=0; k<item.unique_aura.length; k++)
+					{
+						i_up = item.unique_aura[k];
+						not_found = true;
+						
+						for(var j=0; j<champion.unique_aura.length; j++)
+						{
+							c_up = champion.unique_aura[j];
+							
+							if(i_up.alias == c_up.alias)
+							{
+								not_found = false;
+								
+								if(i_up.zindex > c_up.zindex)
+									champion.unique_aura[j] = i_up;
+							}
+						}
+						
+						// If no unique_aura in champion, add unique_aura
+						if(not_found)
+							champion.unique_aura.push(i_up);
+					}
+				}
 			}
 		}
 		
@@ -423,72 +571,170 @@ function calculate_item_stats()
 			if (typeof champion.unique_passive[u] != "undefined")
 			{
 				up = champion.unique_passive[u];
-				console.log(up);
 				
 				if(typeof up.hp != "undefined")
-					champion.hp += up.hp;
+					champion.bonus_hp += up.hp;
 				
 				if(typeof up.hp5 != "undefined")
-					champion.hp5 += up.hph5;
+					champion.bonus_hp5 += up.hp5;
 				
 				if(typeof up.mp != "undefined")
-					champion.mp += up.mp;
+					champion.bonus_mp += up.mp;
 				
 				if(typeof up.mp5 != "undefined")
-					champion.mp5 += up.mp5;
+					champion.bonus_mp5 += up.mp5;
 					
 				if(typeof up.ki != "undefined")
-					champion.ki += up.ki;
+					champion.bonus_ki += up.ki;
 				
 				if(typeof up.ki5 != "undefined")
-					champion.ki5 += up.ki5;
+					champion.bonus_ki5 += up.ki5;
 					
 				if(typeof up.ad != "undefined")
-					champion.ad += up.ad;
+					champion.bonus_ad += up.ad;
 				
 				if(typeof up.ap != "undefined")
-					champion.ap += up.ap;
+					champion.bonus_ap += up.ap;
 				
 				if(typeof up.armor != "undefined")
-					champion.armor += up.armor;
+					champion.bonus_armor += up.armor;
 				
 				if(typeof up.mr != "undefined")
-					champion.mr += up.mr;
+					champion.bonus_mr += up.mr;
 				
 				if(typeof up.aspd != "undefined")
-					champion.item_aspd += up.aspd;
+					champion.bonus_aspd += up.aspd;
 					
 				if(typeof up.mspd != "undefined")
-					champion.mspd += up.mspd;
+					champion.bonus_mspd += up.mspd;
 				
 				if(typeof up.mspd_percentage != "undefined")
-					champion.mspd_bonus_percentage += up.mspd_percentage;
+					champion.bonus_mspd_percentage += up.mspd_percentage;
 				
-				if(typeof up.armor_pen != "undefined")
-					champion.armor_pen += up.armor_pen;
+				if(typeof up.armor_pen_flat != "undefined")
+					champion.bonus_armor_pen_flat += up.armor_pen_flat;
 				
-				if(typeof up.magic_pen != "undefined")
-					champion.magic_pen += up.magic_pen;
+				if(typeof up.magic_pen_flat != "undefined")
+					champion.bonus_magic_pen_flat += up.magic_pen_flat;
+				
+				if(typeof up.armor_pen_percentage != "undefined")
+					champion.bonus_armor_pen_percentage += up.armor_pen_percentage;
+				
+				if(typeof up.magic_pen_percentage != "undefined")
+					champion.bonus_magic_pen_percentage += up.magic_pen_percentage;
 					
 				if(typeof up.crit_chance != "undefined")
-					champion.crit_chance += up.crit_chance;
+					champion.bonus_crit_chance += up.crit_chance;
 					
-				if(typeof up.mr != "undefined")
-					champion.crit_damage_multiplier += up.crit_damage_multiplier;
+				if(typeof up.crit_damage_multiplier != "undefined")
+					champion.bonus_crit_damage_multiplier += up.crit_damage_multiplier;
 					
 				if(typeof up.lifesteal != "undefined")
-					champion.lifesteal += up.lifesteal;
+					champion.bonus_lifesteal += up.lifesteal;
 				
-				if(typeof up.lifesteal != "undefined")
-					champion.spellvamp += up.spellvamp;
+				if(typeof up.spellvamp != "undefined")
+					champion.bonus_spellvamp += up.spellvamp;
+				
+				if(typeof up.ad_from_percent_max_hp != "undefined")
+					champion.ad_from_percent_max_hp += up.ad_from_percent_max_hp;
+					
+				if(typeof up.gp5 != "undefined")
+					champion.bonus_gp5 += up.gp5;	
+					
+				if(typeof up.bonus_unit_bounty != "undefined")
+					champion.bonus_unit_bounty += up.bonus_unit_bounty;	
 			}
 		}
 		
-		champion.recalculate_aspd();
-		champion.recalculate_mspd();
+		// Calculate Item's Unique Aura Stats
+		for(var u=0; u<champion.unique_aura.length; u++)
+		{
+			if (typeof champion.unique_aura[u] != "undefined")
+			{
+				ua = champion.unique_aura[u];
+				
+				if(typeof ua.ally_effect != "undefined")
+				{
+					ua_ally = ua.ally_effect;
+					
+					if(typeof ua_ally.hp != "undefined")
+						champion.bonus_hp += ua_ally.hp;
+					
+					if(typeof ua_ally.hp5 != "undefined")
+						champion.bonus_hp5 += ua_ally.hp5;
+					
+					if(typeof ua_ally.mp != "undefined")
+						champion.bonus_mp += ua_ally.mp;
+					
+					if(typeof ua_ally.mp5 != "undefined")
+						champion.bonus_mp5 += ua_ally.mp5;
+						
+					if(typeof ua_ally.ki != "undefined")
+						champion.bonus_ki += ua_ally.ki;
+					
+					if(typeof ua_ally.ki5 != "undefined")
+						champion.bonus_ki5 += ua_ally.ki5;
+						
+					if(typeof ua_ally.ad != "undefined")
+						champion.bonus_ad += ua_ally.ad;
+					
+					if(typeof ua_ally.ap != "undefined")
+						champion.bonus_ap += ua_ally.ap;
+					
+					if(typeof ua_ally.armor != "undefined")
+						champion.bonus_armor += ua_ally.armor;
+					
+					if(typeof ua_ally.mr != "undefined")
+						champion.bonus_mr += ua_ally.mr;
+					
+					if(typeof ua_ally.aspd != "undefined")
+						champion.bonus_aspd += ua_ally.aspd;
+						
+					if(typeof ua_ally.mspd != "undefined")
+						champion.bonus_mspd += ua_ally.mspd;
+					
+					if(typeof ua_ally.mspd_percentage != "undefined")
+						champion.bonus_mspd_percentage += ua_ally.mspd_percentage;
+					
+					if(typeof ua_ally.armor_pen_flat != "undefined")
+						champion.bonus_armor_pen_flat += ua_ally.armor_pen_flat;
+					
+					if(typeof ua_ally.magic_pen_flat != "undefined")
+						champion.bonus_magic_pen_flat += ua_ally.magic_pen_flat;
+					
+					if(typeof ua_ally.armor_pen_percentage != "undefined")
+						champion.bonus_armor_pen_percentage += ua_ally.armor_pen_percentage;
+					
+					if(typeof ua_ally.magic_pen_percentage != "undefined")
+						champion.bonus_magic_pen_percentage += ua_ally.magic_pen_percentage;
+						
+					if(typeof ua_ally.crit_chance != "undefined")
+						champion.bonus_crit_chance += ua_ally.crit_chance;
+						
+					if(typeof ua_ally.crit_damage_multiplier != "undefined")
+						champion.bonus_crit_damage_multiplier += ua_ally.crit_damage_multiplier;
+						
+					if(typeof ua_ally.lifesteal != "undefined")
+						champion.bonus_lifesteal += ua_ally.lifesteal;
+					
+					if(typeof ua_ally.spellvamp != "undefined")
+						champion.bonus_spellvamp += ua_ally.spellvamp;
+					
+					if(typeof ua_ally.ad_from_percent_max_hp != "undefined")
+						champion.ad_from_percent_max_hp += ua_ally.ad_from_percent_max_hp;
+						
+					if(typeof ua.gp5 != "undefined")
+						champion.bonus_gp5 += ua.gp5;
+						
+					if(typeof ua.bonus_unit_bounty != "undefined")
+						champion.bonus_unit_bounty += ua.bonus_unit_bounty;	
+				}
+			}
+		}
 	}
 	
-	stabilize();
+	champion.recalculate_aspd();
+	champion.recalculate_mspd();
 }
 
 function calculate_battle_simulation()
@@ -559,7 +805,7 @@ function turned_on_checker()
 		champion.battle_effect['self_effect']['bonus_ad'] = (10 + (15 * champion.skills['r']['lv']));
 }
 
-update_lv(1);
+
 
 // Precise Round
 //=====================================
@@ -571,3 +817,7 @@ function precise_round(num,decimals){
 function toPercentage(num,decimals) {
 	return precise_round(num*100,decimals) + "%";
 }
+
+// Start
+init_bonus_stat();
+update_lv(1);

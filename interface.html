@@ -2,93 +2,125 @@
 <html>
 <head>
 <title>LOL Champion Builder</title>
-<script src="js/main.js"></script>
 <script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div>
-	<div><strong>Name:</strong> <span id="name"></span></div>
-	<div><strong>Level:</strong> <span id="lv"></span></div>
-	<div><strong>HP:</strong> <span id="hp"></span></div>
-	<div><strong>MP:</strong> <span id="mp"></span></div>
-	<div><strong>Ki:</strong> <span id="ki"></span></div>
-	<hr />
-	<div><strong>HP Regen / 5:</strong> <span id="hp5"></span></div>
-	<div><strong>MP Regen / 5:</strong> <span id="mp5"></span></div>
-	<div><strong>Ki Regen / 5:</strong> <span id="ki5"></span></div>
-	<hr />
-	<div><strong>Attack Damage:</strong> <span id="ad"></span></div>
-	<div><strong>Ability Power:</strong> <span id="ap"></span></div>
-	<hr />
-	<div><strong>Armor Penetration:</strong> <span id="armor_pen"></span></div>
-	<div><strong>Magic Penetration:</strong> <span id="magic_pen"></span></div>
-	<hr />
-	<div><strong>Attack Speed:</strong> <span id="aspd"></span></div>
-	<div><strong>Range:</strong> <span id="range"></span></div>
-	<div><strong>Movement Speed:</strong> <span id="mspd"></span></div>
-	<hr />
-	<div><strong>Crit Chance:</strong> <span id="crit_chance"></span></div>
-	<div><strong>Crit Damage Multiplier:</strong> <span id="crit_damage_multiplier"></span>x</div>
-	<hr />
-	<div><strong>Armor:</strong> <span id="armor"></span></div>
-	<div><strong>Magic Resist:</strong> <span id="mr"></span></div>
-	<hr />
-	<div><strong>Life Steal:</strong> <span id="lifesteal"></span></div>
-	<div><strong>Spell Vamp:</strong> <span id="spellvamp"></span></div>
-	<hr />
-	<div>
-		<strong>Battle Simulator:</strong>
-		
-		<h3>Auto Attack:</h3>
-		<ul>
-			<li>Physical Damage / sec: <span id="bs_ad_dealt"></span></li>
-			<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit"></span></li>
-			<li>Magic Damage / sec: <span id="bs_ap_dealt"></span></li>
-			<li>Life Steal / sec: <span id="bs_lifesteal"></span></li>
-		</ul>
-		
-		<h3>Receiving Damage</h3>
-		<ul>
-			<li>Physical Damage Taken: <span id="bs_ad_taken"></span></li>
-			<li>Magic Damage Taken: <span id="bs_ap_taken"></span></li>
-		</ul>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="row">
+				<div class="col-md-6">
+					<h2>Champion</h2>
+					<div><strong>Name:</strong> <span id="name"></span></div>
+					<div><strong>Level:</strong> <span id="lv"></span></div>
+					<div><strong>HP:</strong> <span id="hp"></span></div>
+					<div><strong>MP:</strong> <span id="mp"></span></div>
+					<div><strong>Ki:</strong> <span id="ki"></span></div>
+					<hr />
+					<div><strong>HP Regen / 5:</strong> <span id="hp5"></span></div>
+					<div><strong>MP Regen / 5:</strong> <span id="mp5"></span></div>
+					<div><strong>Ki Regen / 5:</strong> <span id="ki5"></span></div>
+					<hr />
+					<div><strong>Attack Damage:</strong> <span id="ad"></span> (<span id="ori_ad"></span> + <span id="bonus_ad"></span>)</div>
+					<div><strong>Ability Power:</strong> <span id="ap"></span> (<span id="ori_ap"></span> + <span id="bonus_ap"></span>)</div>
+					<div><strong>Armor Penetration:</strong> <span id="armor_pen_percentage"></span> + <span id="armor_pen_flat"></span></div>
+					<div><strong>Magic Penetration:</strong> <span id="magic_pen_percentage"></span> + <span id="magic_pen_flat"></span></div>
+					<hr />
+					<div><strong>Attack Speed:</strong> <span id="aspd"></span></div>
+					<div><strong>Range:</strong> <span id="range"></span></div>
+					<div><strong>Movement Speed:</strong> <span id="mspd"></span></div>
+					<hr />
+					<div><strong>Crit Chance:</strong> <span id="crit_chance"></span></div>
+					<div><strong>Crit Damage Multiplier:</strong> <span id="crit_damage_multiplier"></span>x</div>
+					<hr />
+					<div><strong>Armor:</strong> <span id="armor"></span> (<span id="ori_armor"></span> + <span id="bonus_armor"></span>)</div>
+					<div><strong>Magic Resist:</strong> <span id="mr"></span> (<span id="ori_mr"></span> + <span id="bonus_mr"></span>)</div>
+					<hr />
+					<div><strong>Life Steal:</strong> <span id="lifesteal"></span></div>
+					<div><strong>Spell Vamp:</strong> <span id="spellvamp"></span></div>
+					<hr />
+					<div><strong>Extra Gold / 5sec:</strong> <span id="gp5"></span></div>
+					<div><strong>Extra Gold / Unit:</strong> <span id="extra_unit_bounty"></span></div>
+					<div><strong>Extra Gold / Champion:</strong> <span id="extra_champion_bounty"></span></div>
+				</div>
+				<div class="col-md-6">
+					<div>
+						<h2>Battle Simulator</h2>
+						
+						<h3>Auto Attack:</h3>
+						<ul>
+							<li>Physical Damage / sec: <span id="bs_ad_dealt"></span></li>
+							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit"></span></li>
+							<li>Magic Damage / sec: <span id="bs_ap_dealt"></span></li>
+							<li>Life Steal / sec: <span id="bs_lifesteal"></span></li>
+						</ul>
+						
+						<h3>Receiving Damage</h3>
+						<ul>
+							<li>Physical Damage Taken: <span id="bs_ad_taken"></span></li>
+							<li>Magic Damage Taken: <span id="bs_ap_taken"></span></li>
+						</ul>
+						
+						<h3>Unique Passive</h3>
+						<ul id="unique_passive">
+							<li></li>
+						</ul>
+						
+						<h3>Unique Aura</h3>
+						<ul id="unique_aura">
+							<li></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<h2>Customize</h2>
+			Select Level:
+			<select id="level_selector" onchange="update_level()">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+				<option value="11">11</option>
+				<option value="12">12</option>
+				<option value="13">13</option>
+				<option value="14">14</option>
+				<option value="15">15</option>
+				<option value="16">16</option>
+				<option value="17">17</option>
+				<option value="18">18</option>
+			</select>
+			<hr />
+			<div id="item_list">
+				<label><input type="text" id="abyssal_scepter" value="0" onkeyup="toggle_item()" /> Abyssal Scepter</label><br />
+				<label><input type="text" id="aegis_of_the_legion" value="0" onkeyup="toggle_item()" /> Aegis of the Legion</label><br />
+				<label><input type="text" id="amplifying_tome" value="0" onkeyup="toggle_item()" /> Amplifying Tome</label><br />
+				<label><input type="text" id="atmas_impaler" value="0" onkeyup="toggle_item()" /> Atma's Impaler</label><br />
+				<label><input type="text" id="avarice_blade" value="0" onkeyup="toggle_item()" /> Avarice Blade</label><br />
+				<label><input type="text" id="bf_sword" value="0" onkeyup="toggle_item()" /> B.F. Sword</label><br />
+				<label><input type="text" id="blasting_wand" value="0" onkeyup="toggle_item()" /> Blasting Wand</label><br />
+				<label><input type="text" id="long_sword" value="0" onkeyup="toggle_item()" /> Long Sword</label><br />
+				<label><input type="text" id="vampiric_scepter" value="0" onkeyup="toggle_item()" /> Vampiric Scepter</label><br />
+				<label><input type="text" id="phantom_dancer" value="0" onkeyup="toggle_item()" /> Phantom Dancer</label><br />
+				<label><input type="text" id="zeal" value="0" onkeyup="toggle_item()" /> Zeal</label><br />
+				<hr />
+				<label><input type="text" id="boots_of_speed" value="0" onkeyup="toggle_item()" /> Boots of Speed</label><br />
+				<label><input type="text" id="berserkers_greaves" value="0" onkeyup="toggle_item()" /> Berserker's Greaves</label><br />
+			</div>
+			<div id="total_items"></div>
+			<hr />
+		</div>
 	</div>
-	<hr />
-	Select Level:
-	<select id="level_selector" onchange="update_level()">
-		<option value="1">1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-		<option value="6">6</option>
-		<option value="7">7</option>
-		<option value="8">8</option>
-		<option value="9">9</option>
-		<option value="10">10</option>
-		<option value="11">11</option>
-		<option value="12">12</option>
-		<option value="13">13</option>
-		<option value="14">14</option>
-		<option value="15">15</option>
-		<option value="16">16</option>
-		<option value="17">17</option>
-		<option value="18">18</option>
-	</select>
-	<hr />
-	<div id="item_list">
-		<label><input type="text" id="long_sword" value="0" onkeyup="toggle_item()" /> Long Sword</label><br />
-		<label><input type="text" id="bf_sword" value="0" onkeyup="toggle_item()" /> B.F. Sword</label><br />
-		<label><input type="text" id="vampiric_scepter" value="0" onkeyup="toggle_item()" /> Vampiric Scepter</label><br />
-		<label><input type="text" id="amplifying_tome" value="0" onkeyup="toggle_item()" /> Amplifying Tome</label><br />
-		<label><input type="text" id="zeal" value="0" onkeyup="toggle_item()" /> Zeal</label><br />
-		<label><input type="text" id="phantom_dancer" value="0" onkeyup="toggle_item()" /> Phantom Dancer</label><br />
-		<hr />
-		<label><input type="text" id="boots_of_speed" value="0" onkeyup="toggle_item()" /> Boots of Speed</label><br />
-		<label><input type="text" id="berserkers_greaves" value="0" onkeyup="toggle_item()" /> Berserker's Greaves</label><br />
-	</div>
-	<div id="total_items"></div>
-	<hr />
 </div>
 
 <script>
@@ -111,10 +143,12 @@
 		$("#hp5").html(champion.hp5);
 		$("#mp5").html(champion.mp5);
 		$("#ki5").html(champion.ki5);
-		$("#ad").html(champion.ad);
-		$("#ap").html(champion.ap);
-		$("#armor_pen").html(champion.armor_pen);
-		$("#magic_pen").html(champion.magic_pen);
+		$("#ad").html(precise_round(champion.ad,0));
+		$("#ap").html(precise_round(champion.ap,0));
+		$("#armor_pen_flat").html(champion.armor_pen_flat);
+		$("#magic_pen_flat").html(champion.magic_pen_flat);
+		$("#armor_pen_percentage").html(toPercentage(champion.armor_pen_percentage,0));
+		$("#magic_pen_percentage").html(toPercentage(champion.magic_pen_percentage,0));
 		$("#aspd").html(precise_round(champion.aspd,3));
 		$("#mspd").html(precise_round(champion.mspd,0));
 		$("#range").html(champion.range);
@@ -125,6 +159,20 @@
 		$("#crit_chance").html(toPercentage(champion.crit_chance,2));
 		$("#crit_damage_multiplier").html(champion.crit_damage_multiplier);
 		
+		$("#ori_ad").html(precise_round(champion.ori_ad,0));
+		$("#ori_ap").html(precise_round(champion.ori_ap,0));
+		$("#ori_armor").html(precise_round(champion.ori_armor,0));
+		$("#ori_mr").html(precise_round(champion.ori_mr,0));
+		
+		$("#bonus_ad").html(precise_round(champion.bonus_ad,0));
+		$("#bonus_ap").html(precise_round(champion.bonus_ap,0));
+		$("#bonus_armor").html(precise_round(champion.bonus_armor,0));
+		$("#bonus_mr").html(precise_round(champion.bonus_mr,0));
+		
+		$("#gp5").html(precise_round(champion.gp5,2));
+		$("#extra_unit_bounty").html(precise_round(champion.extra_unit_bounty,0));
+		$("#extra_champion_bounty").html(precise_round(champion.extra_champion_bounty,0));
+		
 		$("#bs_ad_dealt").html(precise_round(champion.bs_ad_dealt,2));
 		$("#bs_ad_dealt_w_crit").html(precise_round(champion.bs_ad_dealt_w_crit,2));
 		$("#bs_ap_dealt").html(precise_round(champion.bs_ap_dealt,2));
@@ -132,7 +180,25 @@
 		$("#bs_ap_taken").html(toPercentage(champion.bs_ap_taken,2));
 		$("#bs_lifesteal").html(precise_round(champion.bs_lifesteal,2));
 		
-		console.log(champion.unique_passive);
+		var temp = "";
+		for (var z=0; z<champion.unique_aura.length; z++)
+		{
+			if(champion.unique_aura[z].name != "")
+				temp += '<li>'+champion.unique_aura[z].name+'</li>';
+			else
+				temp += '<li>'+champion.unique_aura[z].alias+'</li>';
+		}
+		$("#unique_aura").html(temp);
+		
+		temp = "";
+		for (var z=0; z<champion.unique_passive.length; z++)
+		{
+			if(champion.unique_passive[z].name != "")
+				temp += '<li>'+champion.unique_passive[z].name+'</li>';
+			else
+				temp += '<li>'+champion.unique_passive[z].alias+'</li>';
+		}
+		$("#unique_passive").html(temp);
 	}
 	
 	function toggle_item()
@@ -150,7 +216,9 @@
 	function refresh()
 	{
 		update_lv($("#level_selector").val());
+		init_bonus_stat();
 		calculate_item_stats();
+		final_stats_calc();
 		calculate_battle_simulation();
 		
 		// Update Interface at the very end
