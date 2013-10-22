@@ -50,6 +50,32 @@
 					<div>
 						<h2>Battle Simulator</h2>
 						
+						<h3>Passive:</h3>
+						<ul>
+							<li>Bonus MSPD: <span id="skill_passive_output_0"></span></li>
+						</ul>
+						
+						<h3>Q:</h3>
+						<ul>
+							<li>Bonus Damage: <span id="skill_q_output_0"></span></li>
+						</ul>
+						
+						<h3>W:</h3>
+						<ul>
+							<li>Bonus Damage: <span id="skill_w_output_0"></span></li>
+						</ul>
+						
+						<h3>E:</h3>
+						<ul>
+							<li>Initial Damage: <span id="skill_e_output_0"></span></li>
+							<li>Wall Knockout Damage: <span id="skill_e_output_1"></span></li>
+						</ul>
+						
+						<h3>R:</h3>
+						<ul>
+							<li>Bonus AD: <span id="skill_r_output_0"></span></li>
+						</ul>
+						
 						<h3>Auto Attack:</h3>
 						<h4>No Armor &amp; Magic Resist, No Reduction</h4>
 						<ul>
@@ -121,6 +147,13 @@
 				<option value="17">17</option>
 				<option value="18">18</option>
 			</select>
+			<hr />
+			<div id="skill_list">
+				<label><input type="text" id="skill_q_lv" value="0" onkeyup="toggle_skill()" /> Q</label><br />
+				<label><input type="text" id="skill_w_lv" value="0" onkeyup="toggle_skill()" /> W</label><br />
+				<label><input type="text" id="skill_e_lv" value="0" onkeyup="toggle_skill()" /> E</label><br />
+				<label><input type="text" id="skill_r_lv" value="0" onkeyup="toggle_skill()" /> R</label><br />
+			</div>
 			<hr />
 			<div id="item_list">
 				<label><input type="text" id="abyssal_scepter" value="0" onkeyup="toggle_item()" /> Abyssal Scepter</label><br />
@@ -238,6 +271,13 @@
 				temp += '<li>'+champion.unique_passive[z].alias+'</li>';
 		}
 		$("#unique_passive").html(temp);
+		
+		$("#skill_passive_output_0").html(precise_round(champion.skills['passive']['output'][0],0));
+		$("#skill_q_output_0").html(precise_round(champion.skills['q']['output'][0],0));
+		$("#skill_w_output_0").html(precise_round(champion.skills['w']['output'][0],0));
+		$("#skill_e_output_0").html(precise_round(champion.skills['e']['output'][0],0));
+		$("#skill_e_output_1").html(precise_round(champion.skills['e']['output'][1],0));
+		$("#skill_r_output_0").html(precise_round(champion.skills['r']['output'][0],0));
 	}
 	
 	function toggle_item()
@@ -252,12 +292,29 @@
 		refresh();
 	}
 	
+	function toggle_skill()
+	{
+		$("#skill_list input[type=text]").each(function() {
+			switch(this.id)
+			{
+				case "skill_passive_lv": champion.skills['passive']['lv'] = this.value;	break;
+				case "skill_q_lv": champion.skills['q']['lv'] = this.value;	break;
+				case "skill_w_lv": champion.skills['w']['lv'] = this.value;	break;
+				case "skill_e_lv": champion.skills['e']['lv'] = this.value;	break;
+				case "skill_r_lv": champion.skills['r']['lv'] = this.value;	break;
+			}
+		});
+		
+		refresh();
+	}
+	
 	function refresh()
 	{
 		update_lv($("#level_selector").val());
 		init_bonus_stat();
 		calculate_item_stats();
 		final_stats_calc();
+		calculate_skills();
 		calculate_battle_simulation();
 		
 		// Update Interface at the very end

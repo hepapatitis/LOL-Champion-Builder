@@ -325,6 +325,7 @@ champion.skills = new Array();
 champion.skills['passive'] = new Array();
 champion.skills['passive']['title'] = "Night Hunter";
 champion.skills['passive']['desc'] = "Vayne gains 30 movement speed when moving towards a visible enemy champion.";
+champion.skills['passive']['output'] = new Array();
 champion.skills['passive']['flag'] = new Array();
 champion.skills['passive']['flag']['isTurnedOn'] = false;
 champion.skills['passive']['self_effect'] = new Array();
@@ -334,6 +335,7 @@ champion.skills['q'] = new Array();
 champion.skills['q']['title'] = "Tumble";
 champion.skills['q']['desc'] = "";
 champion.skills['q']['lv'] = 0;
+champion.skills['q']['output'] = new Array();
 champion.skills['q']['flag'] = new Array();
 champion.skills['q']['flag']['isTurnedOn'] = false;
 
@@ -341,6 +343,7 @@ champion.skills['w'] = new Array();
 champion.skills['w']['title'] = "Silver Bolts";
 champion.skills['w']['desc'] = "";
 champion.skills['w']['lv'] = 0;
+champion.skills['w']['output'] = new Array();
 champion.skills['w']['flag'] = new Array();
 champion.skills['w']['flag']['hasEnemy'] = false;
 champion.skills['w']['flag']['isTurnedOn'] = false;
@@ -351,6 +354,7 @@ champion.skills['e'] = new Array();
 champion.skills['e']['title'] = "Condemn";
 champion.skills['e']['desc'] = "";
 champion.skills['e']['lv'] = 0;
+champion.skills['e']['output'] = new Array();
 champion.skills['e']['flag'] = new Array();
 champion.skills['e']['flag']['knockWall'] = false;
 champion.skills['e']['flag']['isTurnedOn'] = false;
@@ -359,6 +363,7 @@ champion.skills['r'] = new Array();
 champion.skills['r']['title'] = "Final Hour";
 champion.skills['r']['desc'] = "";
 champion.skills['r']['lv'] = 0;
+champion.skills['r']['output'] = new Array();
 champion.skills['r']['flag'] = new Array();
 champion.skills['r']['flag']['isTurnedOn'] = false;
 champion.skills['r']['duration'] = 6 + (2 * champion.skills['r']['lv']);
@@ -878,9 +883,9 @@ function flag_checker()
 
 	// E: Condemn
 	if(champion.skills['e']['flag']['knockWall'])
-		champion.skills['e']['enemy_effect']['damage_ad'] = (10 + (35 * champion.skills['e']['lv'])) * 2;
+		champion.skills['e']['enemy_effect']['damage_ad'] = ((10 + (35 * champion.skills['e']['lv'])) + (0.5 * champion.bonus_ad)) * 2;
 	else
-		champion.skills['e']['enemy_effect']['damage_ad'] = (10 + (35 * champion.skills['e']['lv']));
+		champion.skills['e']['enemy_effect']['damage_ad'] = (10 + (35 * champion.skills['e']['lv'])) + (0.5 * champion.bonus_ad);
 }
 
 function turned_on_checker()
@@ -903,6 +908,26 @@ function turned_on_checker()
 	// R: Final Hour
 	if(champion.skills['r']['flag']['isTurnedOn'])
 		champion.battle_effect['self_effect']['bonus_ad'] = (10 + (15 * champion.skills['r']['lv']));
+}
+
+function calculate_skills()
+{
+	// Q: Tumble
+	champion.skills['passive']['output'][0] = 30;
+	
+	// Q: Tumble
+	champion.skills['q']['output'][0] = (25 + (5 * champion.skills['q']['lv']))/100 * champion.ad;
+	
+	// W: Silver Bolts
+	// Brute force enemy HP (1800)
+	champion.skills['w']['output'][0] = (10 + (10 * champion.skills['w']['lv'])) + ((3 + (1 * champion.skills['w']['lv']))/100 * 1800);
+		
+	// E: Condemn
+	champion.skills['e']['output'][0] = (10 + (35 * champion.skills['e']['lv'])) + (0.5 * champion.bonus_ad);
+	champion.skills['e']['output'][1] = (10 + (35 * champion.skills['e']['lv'])) + (0.5 * champion.bonus_ad);
+	
+	// R: Final Hour
+	champion.skills['r']['output'][0] = (10 + (15 * champion.skills['r']['lv']));
 }
 
 
