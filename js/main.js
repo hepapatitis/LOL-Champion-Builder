@@ -271,6 +271,24 @@ champion.addItem = function(alias, total) {
 	for(var i=0; i<total; i++)
 		champion.items.push(alias);
 }
+champion.removeItem = function(alias, total) {
+	if(total == "undefined")
+		total = 1;
+	
+	// Just push the alias into items
+	var count = 0;
+	for(var i=0; i<champion.items.length; i++)
+	{
+		if(champion.items[i] == alias);
+		{
+			// TO-DO: array splice
+			count++;
+		}
+		
+		if(count == total)
+			return;
+	}
+}
 
 // Instantiate Base Attributes
 champion.b_hp = 359;
@@ -825,30 +843,36 @@ function calculate_battle_simulation()
 		champion.bs_ap_taken = 2 - 100 / (100 - champion.mr);
 	
 	
-	// With Enemy Armor & MR 100 
+	// With Enemy Armor & MR 1
 	var e_armor, e_mr;
-	e_armor = 100;
-	e_mr = 100;
-	champion.bs_ad_reduction_100 = calculate_damage_taken_portion(e_armor,champion.armor_pen_flat, champion.armor_pen_percentage);
-	champion.bs_ap_reduction_100 = calculate_damage_taken_portion(e_mr,champion.magic_pen_flat, champion.magic_pen_percentage);
+	var e_input_1 =  $("#bs_1").val();
 	
-	champion.bs_ad_dealt_100 = champion.aspd * champion.ad * champion.bs_ad_reduction_100;
-	champion.bs_ad_dealt_w_crit_100 = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)) * champion.bs_ad_reduction_100; // Fix this
-	champion.bs_ap_dealt_100 = 0 * champion.bs_ap_reduction_100; // Not Implemented
+	e_armor = e_input_1;
+	e_mr = e_input_1;
 	
-	champion.bs_lifesteal_100 = (champion.bs_ad_dealt_100 * champion.bs_ad_reduction_100) * champion.lifesteal;
+	champion.bs_ad_reduction_1 = calculate_damage_taken_portion(e_armor,champion.armor_pen_flat, champion.armor_pen_percentage);
+	champion.bs_ap_reduction_1 = calculate_damage_taken_portion(e_mr,champion.magic_pen_flat, champion.magic_pen_percentage);
 	
-	// With Enemey Armor & MR 150
-	e_armor = 150;
-	e_mr = 150;
-	champion.bs_ad_reduction_150 = calculate_damage_taken_portion(e_armor,champion.armor_pen_flat, champion.armor_pen_percentage);
-	champion.bs_ap_reduction_150 = calculate_damage_taken_portion(e_mr,champion.magic_pen_flat, champion.magic_pen_percentage);
+	champion.bs_ad_dealt_1 = champion.aspd * champion.ad * champion.bs_ad_reduction_1;
+	champion.bs_ad_dealt_w_crit_1 = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)) * champion.bs_ad_reduction_1; // Fix this
+	champion.bs_ap_dealt_1 = 0 * champion.bs_ap_reduction_1; // Not Implemented
 	
-	champion.bs_ad_dealt_150 = champion.aspd * champion.ad * champion.bs_ad_reduction_150;
-	champion.bs_ad_dealt_w_crit_150 = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)) * champion.bs_ad_reduction_150; // Fix this
-	champion.bs_ap_dealt_150 = 0 * champion.bs_ap_reduction_150; // Not Implemented
+	champion.bs_lifesteal_1 = (champion.bs_ad_dealt_1 * champion.bs_ad_reduction_1) * champion.lifesteal;
 	
-	champion.bs_lifesteal_150 = (champion.bs_ad_dealt_100 * champion.bs_ad_reduction_150) * champion.lifesteal;
+	// With Enemey Armor & MR 2
+	var e_input_2 =  $("#bs_2").val();
+
+	e_armor = e_input_2;
+	e_mr = e_input_2;
+	
+	champion.bs_ad_reduction_2 = calculate_damage_taken_portion(e_armor,champion.armor_pen_flat, champion.armor_pen_percentage);
+	champion.bs_ap_reduction_2 = calculate_damage_taken_portion(e_mr,champion.magic_pen_flat, champion.magic_pen_percentage);
+	
+	champion.bs_ad_dealt_2 = champion.aspd * champion.ad * champion.bs_ad_reduction_2;
+	champion.bs_ad_dealt_w_crit_2 = champion.aspd * (champion.ad * (1+champion.crit_chance) * (champion.crit_damage_multiplier / 2)) * champion.bs_ad_reduction_2; // Fix this
+	champion.bs_ap_dealt_2 = 0 * champion.bs_ap_reduction_2; // Not Implemented
+	
+	champion.bs_lifesteal_2 = (champion.bs_ad_dealt_1 * champion.bs_ad_reduction_2) * champion.lifesteal;
 }
 
 function calculate_damage_taken_portion(def, flat_pen, percentage_pen)

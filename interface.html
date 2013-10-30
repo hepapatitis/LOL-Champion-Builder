@@ -45,6 +45,11 @@
 					<div><strong>Extra Gold / 5sec:</strong> <span id="gp5"></span></div>
 					<div><strong>Extra Gold / Unit:</strong> <span id="extra_unit_bounty"></span></div>
 					<div><strong>Extra Gold / Champion:</strong> <span id="extra_champion_bounty"></span></div>
+					<hr />
+					<div>
+						<strong>Items:</strong>
+						<div id="items" class=""></div>
+					</div>
 				</div>
 				<div class="col-md-6">
 					<div>
@@ -85,24 +90,24 @@
 							<li>Life Steal / sec: <span id="bs_lifesteal"></span></li>
 						</ul>
 						
-						<h4>100 Armor &amp; Magic Resist</h4>
+						<h4><input id="bs_1" type="text" style="width:50px" value="100" onkeyup="update_battle_simulation()" /> Armor &amp; Magic Resist</h4>
 						<ul>
-							<li>Physical Damage / sec: <span id="bs_ad_dealt_100"></span></li>
-							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit_100"></span></li>
-							<li>Magic Damage / sec: <span id="bs_ap_dealt_100"></span></li>
-							<li>Life Steal / sec: <span id="bs_lifesteal_100"></span></li>
-							<li>Enemy's Physical Damage Taken: <span id="bs_ad_reduction_100"></span></li>
-							<li>Enemy's Magic Damage Taken: <span id="bs_ap_reduction_100"></span></li>
+							<li>Physical Damage / sec: <span id="bs_ad_dealt_1"></span></li>
+							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit_1"></span></li>
+							<li>Magic Damage / sec: <span id="bs_ap_dealt_1"></span></li>
+							<li>Life Steal / sec: <span id="bs_lifesteal_1"></span></li>
+							<li>Enemy's Physical Damage Taken: <span id="bs_ad_reduction_1"></span></li>
+							<li>Enemy's Magic Damage Taken: <span id="bs_ap_reduction_1"></span></li>
 						</ul>
 						
-						<h4>150 Armor &amp; Magic Resist</h4>
+						<h4><input id="bs_2" type="text" style="width:50px" value="150" onkeyup="update_battle_simulation()" /> Armor &amp; Magic Resist</h4>
 						<ul>
-							<li>Physical Damage / sec: <span id="bs_ad_dealt_150"></span></li>
-							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit_150"></span></li>
-							<li>Magic Damage / sec: <span id="bs_ap_dealt_150"></span></li>
-							<li>Life Steal / sec: <span id="bs_lifesteal_150"></span></li>
-							<li>Enemy's Physical Damage Taken: <span id="bs_ad_reduction_150"></span></li>
-							<li>Enemy's Magic Damage Taken: <span id="bs_ap_reduction_150"></span></li>
+							<li>Physical Damage / sec: <span id="bs_ad_dealt_2"></span></li>
+							<li>Physical Damage / sec (with Crit): <span id="bs_ad_dealt_w_crit_2"></span></li>
+							<li>Magic Damage / sec: <span id="bs_ap_dealt_2"></span></li>
+							<li>Life Steal / sec: <span id="bs_lifesteal_2"></span></li>
+							<li>Enemy's Physical Damage Taken: <span id="bs_ad_reduction_2"></span></li>
+							<li>Enemy's Magic Damage Taken: <span id="bs_ap_reduction_2"></span></li>
 						</ul>
 						
 						<h3>Receiving Damage</h3>
@@ -190,6 +195,24 @@
 		refresh();
 	}
 	
+	function update_battle_simulation()
+	{
+		calculate_battle_simulation();
+		refresh();
+	}
+	
+	function update_item()
+	{
+		var tmp = "", item;
+		for(var i=0; i<champion.items.length; i++)
+		{
+			item = champion.items[i];
+			tmp += "<img src='images/items/"+item+".png' alt='"+item+"' />";
+		}
+	
+		$("#items").html(tmp);
+	}
+	
 	function update_interface()
 	{
 		$("#name").html(champion.name);
@@ -235,19 +258,19 @@
 		$("#bs_ap_dealt").html(precise_round(champion.bs_ap_dealt,2));
 		$("#bs_lifesteal").html(precise_round(champion.bs_lifesteal,2));
 		
-		$("#bs_ad_dealt_100").html(precise_round(champion.bs_ad_dealt_100,2));
-		$("#bs_ad_dealt_w_crit_100").html(precise_round(champion.bs_ad_dealt_w_crit_100,2));
-		$("#bs_ap_dealt_100").html(precise_round(champion.bs_ap_dealt_100,2));
-		$("#bs_lifesteal_100").html(precise_round(champion.bs_lifesteal_100,2));
-		$("#bs_ad_reduction_100").html(toPercentage(champion.bs_ad_reduction_100,2));
-		$("#bs_ap_reduction_100").html(toPercentage(champion.bs_ap_reduction_100,2));
+		$("#bs_ad_dealt_1").html(precise_round(champion.bs_ad_dealt_1,2));
+		$("#bs_ad_dealt_w_crit_1").html(precise_round(champion.bs_ad_dealt_w_crit_1,2));
+		$("#bs_ap_dealt_1").html(precise_round(champion.bs_ap_dealt_1,2));
+		$("#bs_lifesteal_1").html(precise_round(champion.bs_lifesteal_1,2));
+		$("#bs_ad_reduction_1").html(toPercentage(champion.bs_ad_reduction_1,2));
+		$("#bs_ap_reduction_1").html(toPercentage(champion.bs_ap_reduction_1,2));
 		
-		$("#bs_ad_dealt_150").html(precise_round(champion.bs_ad_dealt_150,2));
-		$("#bs_ad_dealt_w_crit_150").html(precise_round(champion.bs_ad_dealt_w_crit_150,2));
-		$("#bs_ap_dealt_150").html(precise_round(champion.bs_ap_dealt_150,2));
-		$("#bs_lifesteal_150").html(precise_round(champion.bs_lifesteal_150,2));
-		$("#bs_ad_reduction_150").html(toPercentage(champion.bs_ad_reduction_150,2));
-		$("#bs_ap_reduction_150").html(toPercentage(champion.bs_ap_reduction_150,2));
+		$("#bs_ad_dealt_2").html(precise_round(champion.bs_ad_dealt_2,2));
+		$("#bs_ad_dealt_w_crit_2").html(precise_round(champion.bs_ad_dealt_w_crit_2,2));
+		$("#bs_ap_dealt_2").html(precise_round(champion.bs_ap_dealt_2,2));
+		$("#bs_lifesteal_2").html(precise_round(champion.bs_lifesteal_2,2));
+		$("#bs_ad_reduction_2").html(toPercentage(champion.bs_ad_reduction_2,2));
+		$("#bs_ap_reduction_2").html(toPercentage(champion.bs_ap_reduction_2,2));
 		
 		$("#bs_ad_taken").html(toPercentage(champion.bs_ad_taken,2));
 		$("#bs_ap_taken").html(toPercentage(champion.bs_ap_taken,2));
@@ -313,6 +336,7 @@
 		update_lv($("#level_selector").val());
 		init_bonus_stat();
 		calculate_item_stats();
+		update_item();
 		final_stats_calc();
 		calculate_skills();
 		calculate_battle_simulation();
